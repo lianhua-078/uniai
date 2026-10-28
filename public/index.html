@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f7fb">
+<meta name="description" content="UniAi 是大學生的 AI 學習導航員，提供任務流程、Prompt 產生、AI 即時回答與結果查證。">
+<meta name="author" content="Xueerlian">
+<title>UniAi</title>
+<style>
+:root{
+ --bg:#f7f7fb;--surface:#fff;--surface2:#f1f0ff;--ink:#202238;--muted:#6d7086;
+ --line:#e5e5ef;--primary:#6558d9;--primary2:#5144c4;--mint:#dff7ed;--green:#167b5b;
+ --peach:#fff0e5;--blue:#e8f2ff;--shadow:0 12px 35px rgba(38,35,85,.07);--radius:20px;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}
+.topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100vw - 1180px)/2));background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;font-size:21px;letter-spacing:-.6px}.logo{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#7668ed,#a59aff);color:white;display:grid;place-items:center;font-size:22px;box-shadow:0 7px 18px #6558d933}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.6px;font-weight:700;text-transform:uppercase;margin-top:-3px}
+.nav{display:flex;gap:5px}.nav button{border:0;background:transparent;color:var(--muted);padding:10px 13px;border-radius:12px;font-weight:700}.nav button.active,.nav button:hover{background:var(--surface2);color:var(--primary)}
+.wrap{max-width:1180px;margin:auto;padding:0 22px}
+.hero{padding:54px 0 30px;display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:center}
+.eyebrow{color:var(--primary);font-weight:800;font-size:12px;letter-spacing:1.3px;text-transform:uppercase;display:flex;gap:8px;align-items:center}
+h1{font-size:clamp(34px,4.5vw,55px);line-height:1.08;letter-spacing:-2px;margin:15px 0 18px;max-width:700px}
+.gradient{background:linear-gradient(100deg,#5c4dd0,#9274ea);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:17px;color:var(--muted);max-width:650px;margin:0 0 24px}
+.btn{border:0;border-radius:13px;padding:12px 17px;background:var(--primary);color:#fff;font-weight:800;box-shadow:0 7px 16px #6558d925;transition:.15s}.btn:hover{background:var(--primary2);transform:translateY(-1px)}.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}.btn.soft{background:var(--surface2);color:var(--primary);box-shadow:none}.btn.small{padding:8px 11px;font-size:13px;border-radius:10px}
+.hero-card{border-radius:26px;background:#24233b;color:#fff;padding:25px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:270px}.hero-card:after{content:"";position:absolute;width:220px;height:220px;border:35px solid #ffffff0b;border-radius:50%;right:-65px;top:-70px}
+.hero-card h3{font-size:21px;margin:12px 0}.hero-card p{color:#c9c9dc;margin:0}.flow-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:23px;position:relative;z-index:1}.flow-mini div{background:#ffffff12;border:1px solid #ffffff18;border-radius:13px;padding:12px 9px;font-size:12px}.flow-mini b{display:block;font-size:15px;margin-bottom:4px}.flow-mini span{color:#c9c9dc}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 44px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}.stat b{font-size:21px;display:block}.stat span{font-size:13px;color:var(--muted)}
+.section{padding:26px 0 42px;scroll-margin-top:90px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:20px}.section-head h2{font-size:28px;letter-spacing:-.7px;margin:5px 0}.section-head p{color:var(--muted);margin:0}.kicker{color:var(--primary);font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:1px}
+.layout{display:grid;grid-template-columns: .85fr 1.15fr;gap:20px;align-items:start}.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:23px;box-shadow:var(--shadow)}.panel h3{margin:0 0 6px;font-size:19px}.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+.field{margin:14px 0}.field label{display:block;font-weight:750;font-size:13px;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid #dcddea;border-radius:12px;padding:12px 13px;background:#fff;color:var(--ink);outline:none}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px #6558d91c}
+.task-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.task-option{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;background:#fff;display:flex;gap:10px;align-items:flex-start;color:var(--ink);transition:.15s}.task-option:hover{border-color:#aaa2f1}.task-option.selected{border-color:var(--primary);background:#f5f3ff;box-shadow:0 0 0 2px #6558d91a}.task-option .emoji{font-size:22px}.task-option b{display:block;font-size:13px}.task-option small{display:block;color:var(--muted);font-size:11px;line-height:1.4;margin-top:2px}
+.recommendation{border-radius:17px;background:linear-gradient(135deg,#f1efff,#f8f7ff);padding:18px;margin:14px 0}.rec-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;background:#fff;border:1px solid #e5e1ff;border-radius:99px;color:var(--primary);font-size:11px;font-weight:800}.rec-name{font-size:20px;font-weight:850;margin:8px 0 4px}.rec-desc{color:#575970;font-size:13px}.rec-reason{font-size:13px;margin:12px 0;padding:11px;background:#ffffffa8;border-radius:11px}.tool-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tool-links a{display:inline-block;padding:8px 11px;background:#fff;border:1px solid #e4e2f3;border-radius:10px;font-size:12px;font-weight:750}
+.steps{display:grid;gap:12px}.step{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}.step-head{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer}.step-num{width:35px;height:35px;border-radius:12px;background:var(--surface2);color:var(--primary);display:grid;place-items:center;font-weight:900;flex-shrink:0}.step.done .step-num{background:var(--mint);color:var(--green)}.step-head b{display:block}.step-head small{color:var(--muted)}.step-head .chevron{margin-left:auto;color:var(--muted)}.step-body{padding:0 17px 18px 63px;display:none}.step.open .step-body{display:block}.step-body p{margin:0 0 10px;color:#555970}.step-body ul{padding-left:19px;margin:8px 0}.example{background:#f8f8fc;border:1px solid var(--line);padding:13px 14px;border-radius:12px;margin:12px 0;font-size:13px}.example strong{display:block;margin-bottom:5px}.tip{background:#eaf8f2;border-left:3px solid #48ad88;padding:11px 13px;border-radius:8px;font-size:13px;margin:12px 0}
+.prompt-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:20px}.prompt-output{background:#222238;color:#f5f4ff;border-radius:18px;padding:20px;min-height:100%;display:flex;flex-direction:column}.prompt-output .kicker{color:#b9b0ff}.prompt-output h3{margin:7px 0 12px}.prompt-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.75;color:#e3e2f5;flex:1;min-height:230px}.prompt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.prompt-output .btn.secondary{background:#ffffff12;color:white;border-color:#ffffff24}
+.progress-wrap{background:#eeedf7;height:8px;border-radius:99px;overflow:hidden;margin:12px 0 5px}.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#6558d9,#9b8ef7);transition:.2s}.checklist{display:grid;gap:10px}.checkrow{display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff}.checkrow input{accent-color:var(--primary);width:17px;height:17px;margin-top:3px}.checkrow b{display:block;font-size:13px}.checkrow small{display:block;color:var(--muted);font-size:12px}
+.workflow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.workflow-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}.workflow-card .n{font-size:12px;color:var(--primary);font-weight:900}.workflow-card h3{font-size:16px;margin:7px 0}.workflow-card p{font-size:13px;color:var(--muted);margin:0}
+details{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px 16px;margin:9px 0}summary{cursor:pointer;font-weight:800}details p{color:var(--muted);font-size:13px;margin-bottom:0}
+.footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:12px;margin-top:15px}.footer-inner{display:flex;justify-content:space-between;gap:20px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;background:#24233b;color:white;padding:12px 17px;border-radius:12px;z-index:99;transition:.2s;pointer-events:none;box-shadow:var(--shadow)}.toast.show{opacity:1;transform:translate(-50%,0)}
+.hidden{display:none!important}
+@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:35px}.hero-card{min-height:auto}.layout,.prompt-layout{grid-template-columns:1fr}.workflow{grid-template-columns:repeat(2,1fr)}.nav button{padding:8px;font-size:12px}.topbar{padding:0 14px}.brand{font-size:18px}.stats{margin-bottom:20px}}
+@media(max-width:520px){.nav{display:none}.wrap{padding:0 14px}.task-grid{grid-template-columns:1fr}.workflow{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.panel{padding:17px}.section-head{display:block}.section-head .btn{margin-top:12px}.step-body{padding-left:17px}.hero h1{letter-spacing:-1.2px}.footer-inner{display:block}}
+
+.ai-shell{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+.ai-chat{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.ai-chat-head{padding:18px 20px;background:linear-gradient(135deg,#f0edff,#f3fbf8);border-bottom:1px solid var(--line)}
+.ai-chat-head h3{margin:4px 0}.ai-chat-head p{margin:0;color:var(--muted);font-size:13px}
+.ai-messages{padding:18px;min-height:250px;max-height:520px;overflow:auto;display:flex;flex-direction:column;gap:13px}
+.ai-msg{max-width:94%;padding:13px 15px;border-radius:15px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.7}
+.ai-msg.assistant{background:#f4f3fb;border:1px solid #e8e6f5;align-self:flex-start}.ai-msg.user{background:#6558d9;color:white;align-self:flex-end;white-space:pre-wrap}
+.ai-msg p{margin:0 0 8px}.ai-msg p:last-child{margin-bottom:0}.ai-controls{padding:16px;border-top:1px solid var(--line)}
+.ai-controls textarea{width:100%;resize:vertical;min-height:110px;border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff;color:var(--ink)}
+.ai-control-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:10px}.ai-control-row select{flex:1;min-width:180px;border:1px solid var(--line);border-radius:10px;padding:10px;background:white}
+.ai-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.ai-status{font-size:12px;color:var(--muted);margin-top:8px;min-height:18px}
+.ai-side{padding:18px}.ai-side h3{margin-top:0}.ai-side ul{padding-left:18px;color:var(--muted);font-size:13px}.ai-side li{margin:8px 0}.ai-suggestion{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.ai-suggestion button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;color:var(--ink)}
+@media(max-width:850px){.ai-shell{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+ <a class="brand" href="#home" style="color:inherit;text-decoration:none"><span class="logo">✦</span><span>UniAi<small>用 AI 學得更聰明</small></span></a>
+ <nav class="nav" aria-label="網站導覽">
+  <button class="active" data-scroll="home">首頁</button><button data-scroll="navigator">任務導航</button><button data-scroll="ai-assistant">AI 助理</button><button data-scroll="promptlab">Prompt 生成</button><button data-scroll="verify">回答驗證</button>
+ </nav>
+ <button class="btn small" onclick="goTo('navigator')">開始使用 ↗</button>
+</header>
+<main class="wrap" id="home">
+<section class="hero">
+ <div>
+  <div class="eyebrow">✦ 大學生的 AI 學習導航員</div>
+  <h1>不只是使用 AI。<br><span class="gradient">更要懂得如何善用 AI。</span></h1>
+  <p class="lead">UniAi 協助你依照作業的不同階段選擇合適工具、一步步完成任務、寫出清楚有效的 Prompt，並在繳交前檢查 AI 的回答。</p>
+  <button class="btn" onclick="goTo('navigator')">找到適合的工作流程 <span aria-hidden="true">→</span></button>
+  <button class="btn secondary" onclick="goTo('how')">了解使用方式</button>
+ </div>
+ <div class="hero-card">
+  <span class="pill">為大學生設計</span>
+  <h3>從作業要求到經過查證的成果</h3>
+  <p>沒有一個 AI 工具適合所有任務。先釐清需求，再選擇工具、使用方法並驗證結果。</p>
+  <div class="flow-mini"><div><b>01 · 選擇</b><span>確認目標</span></div><div><b>02 · 執行</b><span>寫好 Prompt</span></div><div><b>03 · 查證</b><span>檢查結果</span></div></div>
+ </div>
+</section>
+<div class="stats">
+ <div class="stat"><b>🎯 依任務推薦</b><span>依照具體目標尋找合適工具</span></div>
+ <div class="stat"><b>🧭 步驟式引導</b><span>知道使用 AI 前、中、後該做什麼</span></div>
+ <div class="stat"><b>🔎 批判思考</b><span>不把 AI 的回答直接當成事實</span></div>
+</div>
+
+<section class="section" id="ai-assistant">
+ <div class="section-head"><div><div class="kicker">02 / AI STUDY ASSISTANT</div><h2>直接向 AI 提問，取得即時回覆</h2><p>輸入作業要求或問題。UniAi 會依照你選擇的模式回答，並協助你理解解題過程。</p></div></div>
+ <div class="ai-shell">
+  <div class="ai-chat">
+   <div class="ai-chat-head"><span class="pill">✦ 透過伺服器連接 AI</span><h3>UniAi 學習助理</h3><p>可以貼上作業要求、文件節錄或具體問題。請勿輸入密碼或個人敏感資訊。</p></div>
+   <div class="ai-messages" id="aiMessages" aria-live="polite"><div class="ai-msg assistant">你好！我可以直接回答問題、逐步引導你解題、改善 Prompt，或檢查一段回答與論證。請先選擇模式，再輸入需求。</div></div>
+   <div class="ai-controls">
+    <div class="ai-control-row"><select id="aiMode" aria-label="AI 回覆模式"><option value="answer">直接回答</option><option value="tutor">逐步教學</option><option value="prompt">改善 Prompt</option><option value="verify">檢查回答／論證</option></select><select id="aiStyle" aria-label="回答風格"><option value="simple">簡單易懂</option><option value="academic">學術、條理清楚</option><option value="concise">簡潔、切中重點</option></select></div>
+    <textarea id="aiInput" placeholder="例如：分析 Netflix 進入印度市場的個案，整理核心問題、案例證據、可能方案與建議……" aria-label="輸入給 AI 的問題"></textarea>
+    <div class="ai-suggestion"><button type="button" data-fill="請用簡單的語言解釋這個概念，再提供一個實際例子：">解釋概念</button><button type="button" data-fill="請依照問題、證據、原因、方案與建議的架構分析以下個案：">分析個案</button><button type="button" data-fill="請幫我改善以下 Prompt，讓目標、背景、輸出格式與評估標準更清楚：">改善 Prompt</button></div>
+    <div class="ai-actions"><button class="btn" id="aiSend">送出問題 ↗</button><button class="btn secondary" id="aiClear">清除對話</button><button class="btn secondary" id="aiCopyLast">複製最近的回答</button></div>
+    <div class="ai-status" id="aiStatus" role="status"></div>
+   </div>
+  </div>
+  <aside class="panel ai-side"><div class="kicker">負責任地使用 AI</div><h3>讓回答更有幫助</h3><ul><li>說明課程、目標與老師的要求。</li><li>提供相關資料，不要只說「幫我做這份作業」。</li><li>請 AI 標示不確定之處，不要捏造來源。</li><li>自己閱讀、查證，再用自己的理解整理內容。</li></ul><div class="tip"><b>提醒</b><br>AI 可能出錯。涉及事實、數據或參考來源時，使用前請獨立查證。</div><p class="sub" style="margin-top:14px">設定好伺服器與有效的 API key 後，這裡才會透過 API 產生 AI 回答。</p></aside>
+ </div>
+</section>
+
+<section class="section" id="navigator">
+ <div class="section-head"><div><div class="kicker">01 / AI TASK NAVIGATOR</div><h2>你現在要完成什麼任務？</h2><p>選擇最接近目前作業需求的任務，UniAi 會提供起步流程與提示範例。</p></div></div>
+ <div class="layout">
+  <div class="panel">
+   <h3>選擇學習任務</h3><p class="sub">你可以隨時更換任務。</p>
+   <div class="task-grid" id="taskGrid">
+    <button class="task-option selected" data-task="case"><span class="emoji">🧩</span><span><b>個案分析</b><small>問題、證據、可行方案</small></span></button>
+    <button class="task-option" data-task="research"><span class="emoji">📚</span><span><b>文獻與資料研究</b><small>找來源、閱讀、整理</small></span></button>
+    <button class="task-option" data-task="slides"><span class="emoji">🖥️</span><span><b>製作簡報</b><small>架構、內容、視覺呈現</small></span></button>
+    <button class="task-option" data-task="video"><span class="emoji">🎬</span><span><b>製作影片／內容</b><small>腳本、畫面、剪輯</small></span></button>
+    <button class="task-option" data-task="data"><span class="emoji">📊</span><span><b>資料分析</b><small>Excel、圖表、解讀</small></span></button>
+    <button class="task-option" data-task="writing"><span class="emoji">✍️</span><span><b>寫作與修改</b><small>大綱、論證、表達</small></span></button>
+    <button class="task-option" data-task="language"><span class="emoji">🌏</span><span><b>翻譯與語言學習</b><small>翻譯、解釋、練習</small></span></button>
+    <button class="task-option" data-task="study"><span class="emoji">🧠</span><span><b>考試複習／理解課程</b><small>解釋、記憶卡、測驗</small></span></button>
+   </div>
+   <div class="field"><label for="assignment">簡述你的作業（選填）</label><textarea id="assignment" placeholder="例如：分析 Netflix 在印度市場的擴張策略……"></textarea></div>
+   <div class="field"><label for="level">你目前進行到哪個階段？</label><select id="level"><option value="start">還不知道如何開始</option><option value="research">正在找資料／研究</option><option value="draft">已經有初稿</option><option value="finish">快完成了，需要檢查</option></select></div>
+   <button class="btn" style="width:100%" id="buildPlan">產生學習流程 →</button>
+  </div>
+  <div class="panel" id="planPanel">
+   <div class="kicker">建議流程</div><h3 id="planTitle">有效分析個案</h3><p class="sub" id="planIntro">先理解問題與證據，再評估可能的解決方案。</p>
+   <div class="recommendation" id="toolRecommendation">
+    <div class="rec-top"><span class="pill">工具參考</span><span class="pill">第 1 步</span></div>
+    <div class="rec-name" id="toolName">ChatGPT</div><div class="rec-desc" id="toolDesc">可協助整理問題、分析架構並比較不同方案。</div>
+    <div class="rec-reason"><b>為什麼適合？</b><br><span id="toolReason">它可以協助你將個案拆成明確步驟；仍需提供實際案例、資料與老師的評分標準。</span></div>
+    <div class="tool-links" id="toolLinks"><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">開啟 ChatGPT ↗</a><a href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer">用 Perplexity 找資料 ↗</a></div>
+   </div>
+   <h3 style="font-size:16px;margin-top:18px">建議執行步驟</h3><p class="sub">點開各步驟，查看說明、Prompt 範例，以及你需要自行確認的事項。</p>
+   <div class="steps" id="steps"></div>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="promptlab">
+ <div class="section-head"><div><div class="kicker">02 / PROMPT LEARNING LAB</div><h2>寫出清楚的 Prompt，得到切題的回答</h2><p>填寫左側資訊，UniAi 會組合成有架構、可以直接複製使用的 Prompt。</p></div></div>
+ <div class="prompt-layout">
+  <div class="panel">
+   <h3>建立你的 Prompt</h3><p class="sub">好的 Prompt 不一定要很長，但需要足夠的背景、要求與輸出標準。</p>
+   <div class="field"><label for="pTask">你希望 AI 做什麼？</label><select id="pTask"><option value="個案分析">分析個案</option><option value="搜尋與整理文獻">搜尋與整理文獻</option><option value="規劃簡報大綱">規劃簡報大綱</option><option value="分析資料">分析資料</option><option value="解釋課程概念">解釋課程概念</option><option value="修改初稿">修改初稿</option><option value="撰寫影片腳本">撰寫影片腳本</option><option value="翻譯並解釋術語">翻譯並解釋術語</option></select></div>
+   <div class="field"><label for="pContext">背景／作業要求</label><textarea id="pContext" placeholder="貼上作業要求或說明問題。請勿輸入個人敏感資訊。"></textarea></div>
+   <div class="field"><label for="pRole">希望 AI 扮演什麼角色？</label><input id="pRole" value="具備批判思考能力的大學助教"/></div>
+   <div class="field"><label for="pAudience">回答對象與程度</label><input id="pAudience" value="大學生，基礎程度"/></div>
+   <div class="field"><label for="pFormat">回答格式</label><select id="pFormat"><option>分步驟說明，並加上標題</option><option>以表格整理重點、證據與評論</option><option>包含論點與論據的大綱</option><option>簡短易懂的條列清單</option><option>分段腳本／口白</option></select></div>
+   <div class="field"><label for="pConstraints">需要遵守的條件／評估標準</label><textarea id="pConstraints" placeholder="例如：使用簡單語言、不捏造來源、只依據我提供的資料……">使用清楚易懂的語言。不要捏造數據或參考來源。若資料不足，請先詢問或明確說明假設。</textarea></div>
+   <button class="btn" id="generatePrompt" style="width:100%">產生完整 Prompt ✦</button>
+  </div>
+  <div class="prompt-output">
+   <div class="kicker">你的 PROMPT</div><h3>已準備好，可以複製</h3>
+   <div class="prompt-text" id="promptResult">你是一位具備批判思考能力的大學助教。</div>
+   <div class="prompt-actions"><button class="btn" id="copyPrompt">複製 Prompt</button><button class="btn secondary" id="downloadPrompt">下載 .txt</button><button class="btn secondary" id="resetPrompt">重設</button></div>
+   <p style="font-size:12px;color:#b8b7d0;margin:14px 0 0">小提醒：取得 AI 回答後，可以要求它提供證據、標示不確定之處，並反駁自己的結論。</p>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="verify">
+ <div class="section-head"><div><div class="kicker">03 / AI VERIFICATION</div><h2>不要只因為 AI 說得合理就直接繳交</h2><p>每次取得 AI 的結果後，都可以使用這份檢核清單。</p></div></div>
+ <div class="layout">
+  <div class="panel">
+   <h3>回答查證清單</h3><p class="sub">勾選已完成的項目。</p>
+   <div class="progress-wrap"><div class="progress-bar" id="verifyProgress"></div></div><small id="verifyCount" style="color:var(--muted)">已完成 0/7 項</small>
+   <div class="checklist" id="checklist" style="margin-top:16px">
+    <label class="checkrow"><input type="checkbox"><span><b>對照作業要求</b><small>回答是否確實回應問題與老師提出的評分標準？</small></span></label>
+    <label class="checkrow"><input type="checkbox"><span><b>確認事實與數據</b><small>檢查名稱、日期、數字與重要主張。</small></span></label>
+    <label class="checkrow"><input type="checkbox"><span><b>開啟並閱讀原始來源</b><small>連結是否存在？原始來源真的支持引用的說法嗎？</small></span></label>
+    <label class="checkrow"><input type="checkbox"><span><b>尋找相反觀點</b><small>試著尋找反例、反證或其他可能的解釋。</small></span></label>
+    <label class="checkrow"><input type="checkbox"><span><b>區分事實與推論</b><small>標示哪些內容已獲證實、哪些只是 AI 的推測。</small></span></label>
+    <label class="checkrow"><input type="checkbox"><span><b>用自己的理解重新整理</b><small>不看 AI 回答時，你能不能自己解釋這個內容？</small></span></label>
+    <label class="checkrow"><input type="checkbox"><span><b>確認隱私與課程規範</b><small>不要上傳敏感資料，並遵守老師對 AI 使用的規定。</small></span></label>
+   </div>
+   <button class="btn soft" id="resetChecks" style="margin-top:15px">重設檢核清單</button>
+  </div>
+  <div class="panel">
+   <h3>用 Prompt 反向檢查 AI 的回答</h3><p class="sub">把 AI 的回答貼到你正在使用的工具，再附上這段 Prompt。</p>
+   <div class="example"><strong>查證用 Prompt</strong><span id="verifyPrompt">請檢查你剛才的回答，並將內容分成需要來源支持的事實、推論，以及假設或不確定之處。針對每個重要主張，說明應查找哪一類來源。不要捏造連結或引用。指出至少三個可能錯誤、遺漏或有偏誤的地方，並提出獨立查證方法。若資料不足以得出結論，請明確說明。</span></div>
+   <button class="btn" id="copyVerify">複製查證 Prompt</button>
+   <div class="tip"><b>請記得：</b>AI 可能把錯誤資訊說得很有自信。AI 提供的來源仍然需要實際開啟並確認。</div>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="how">
+ <div class="section-head"><div><div class="kicker">04 / STUDY WORKFLOW</div><h2>完成一份作業時，可以怎麼使用 AI？</h2><p>AI 可以協助學習，但你仍然是做決定並對作業負責的人。</p></div></div>
+ <div class="workflow">
+  <div class="workflow-card"><div class="n">STEP 01</div><div style="font-size:25px">🎯</div><h3>理解作業要求</h3><p>標記題目中的要求動詞、繳交內容、評分標準，以及課程對使用 AI 的限制。</p></div>
+  <div class="workflow-card"><div class="n">STEP 02</div><div style="font-size:25px">🧭</div><h3>選擇工具</h3><p>根據任務選工具，並考慮功能、費用、隱私與資料來源。</p></div>
+  <div class="workflow-card"><div class="n">STEP 03</div><div style="font-size:25px">✍️</div><h3>清楚交代任務</h3><p>提供背景、角色、要求、輸出格式與成功標準，一次完成一個小任務。</p></div>
+  <div class="workflow-card"><div class="n">STEP 04</div><div style="font-size:25px">🔎</div><h3>查證並完成</h3><p>檢查來源、反思論證、用自己的理解修改，並依規定正確引用。</p></div>
+ </div>
+</section>
+
+<section class="section" id="faq">
+ <div class="section-head"><div><div class="kicker">常見問題</div><h2>如何有效使用 UniAi？</h2></div></div>
+ <details><summary>UniAi 會直接用 AI 產生回答嗎？</summary><p>會。此專案已包含 AI API 連接功能；完成伺服器與 API key 設定後，AI 助理便能直接回覆。若尚未設定 API key，其他任務導航與 Prompt 產生功能仍可使用。</p></details>
+ <details><summary>推薦的工具一定是最好的嗎？</summary><p>不一定。推薦只是依任務類型提供的起點，不代表絕對排名。工具的功能、價格、使用限制與資料政策可能變動，使用前請查看官方資訊。</p></details>
+ <details><summary>可以讓 AI 幫我完成整份作業嗎？</summary><p>建議把作業拆成理解題目、規劃、研究、分析、撰寫初稿與查證等小任務。用 AI 幫助自己學習與改善思考，不要直接繳交自己不理解或未查證的內容。</p></details>
+ <details><summary>Prompt 越長就一定越好嗎？</summary><p>不一定。好的 Prompt 應該有清楚目標、足夠背景、輸出要求與評估標準。遇到大型任務時，可以分階段進行，並根據每次結果調整要求。</p></details>
+</section>
+<footer class="footer"><div class="footer-inner"><div><b style="color:var(--ink)">✦ UniAi</b><br>你的 AI 學習導航員</div><div>© 2026 Xueerlian. 保留所有權利。<br>教育產品原型<br>推薦內容僅供參考，使用者仍需自行查證 AI 的輸出。</div></div></footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const data={
+ case:{title:"有效分析個案",intro:"先理解問題與證據，再評估可能的解決方案。",tool:"ChatGPT",desc:"可協助整理問題、分析架構並比較不同方案。",reason:"它可以協助你將個案拆成明確步驟；仍需提供實際案例、資料與老師的評分標準。",links:[["開啟 ChatGPT","https://chatgpt.com/"],["用 Perplexity 找資料","https://www.perplexity.ai/"]],steps:[
+ ["釐清要求","閱讀題目，確認核心問題、作業範圍與評分標準。不要只用「分析這個個案」這種過於籠統的指令。",["記下目標、背景、待解決問題與需要繳交的成果。"],"請閱讀以下作業要求，整理目標、需要回答的問題、評分標準、必要資料與尚不清楚之處。先不要分析個案；若資訊不足，請先問我。"],
+ ["區分事實與假設","整理案例實際提供的資料。案例中沒有的資訊應標示為尚未確認。",["建立表格：案例事實／可能意義／缺少的資訊。"],"請只根據我提供的案例，整理事實、支持證據、可能意義與缺少的資訊。不要加入案例以外的事實；必要時標示「資料不足」。"],
+ ["分析原因與選項","使用適合課程的分析架構，但只選擇真正有助回答問題的方法。",["考慮根本原因、利害關係人、可行選項與取捨。"],"請扮演管理學助教，根據已整理的事實提出 2–3 種可能解釋。每種解釋都列出支持證據、反證與缺少資訊；先不要急著下結論。"],
+ ["建立論證並反思","請 AI 檢查邏輯，而不是讓 AI 代替你做決定。",["每個論點都應有證據、解釋，並連回核心問題。"],"請批判性檢查我的分析大綱，找出邏輯跳躍、缺乏證據的主張、被忽略的觀點並提出改善方式。若我的觀點有依據，請保留；不要自行加入新事實。"],
+ ["完成與查證","用自己的話整理內容，對照原始資料並確認老師的課程規範。",["開啟原始來源，檢查引用、數字與最後結論。"],"請依作業要求建立檢查清單，逐項標示已完成或尚未完成，並引用初稿中的證據。沒有根據時，不要自行判定為合格。"]
+ ]},
+ research:{title:"有根據的文獻與資料研究",intro:"將找來源、閱讀來源與整合資訊拆成不同任務。",tool:"Perplexity",desc:"可協助探索網路資訊並追蹤引用來源。",reason:"適合研究初期探索資料；你仍需開啟原始來源、評估可信度並確認來源真的支持論點。",links:[["開啟 Perplexity","https://www.perplexity.ai/"],["Google Scholar","https://scholar.google.com/"]],steps:[
+ ["定義研究問題","將寬泛主題縮小成可以透過證據回答的具體問題。",["確認主題、範圍、時間與需要的來源類型。"],"請協助我縮小研究主題［主題］，提出 3 個具體研究問題，並說明範圍、搜尋關鍵字與適合的來源類型。先不要寫結論。"],
+ ["尋找原始來源","優先考慮學術研究、官方報告、原始數據與課程教材。",["使用主要關鍵字和同義詞搜尋，記錄作者、日期與出版單位。"],"請為［主題］建立繁體中文與英文搜尋關鍵字，優先推薦學術、官方與原始資料。不要捏造文獻或連結，並說明我該如何逐一查證。"],
+ ["閱讀並評估來源","不要只看標題或摘要；也要檢查方法、樣本、日期與限制。",["確認出版者、證據、可能的利益衝突，以及與研究問題的關聯。"],"請根據我提供的資料，整理研究問題、方法、主要發現、具體證據、限制及與研究問題的關聯。只能使用文件內容；缺少資訊時請明確指出。"],
+ ["整合多個來源","依主題與共識／差異來整理，不要每篇資料只寫一段摘要。",["建立來源—論點—證據—限制的對照矩陣。"],"請根據以下來源筆記建立主題矩陣，整理共同發現、矛盾點、方法差異與研究缺口。每個觀察都要指出由哪些來源支持。"],
+ ["引用與核對","逐一回到原始來源檢查引用，並遵守老師指定的引用格式。",["不要使用尚未開啟的來源，也不要把未確認的句子歸給某篇文獻。"],"請檢查文獻清單與引用內容，列出缺少作者、年份、標題、出版資訊或 URL／DOI 的項目供我查證。沒有資料的部分不要自行補上。"]
+ ]},
+ slides:{title:"建立有邏輯的簡報",intro:"先建立故事線與架構，再開始設計版面。",tool:"ChatGPT",desc:"可協助釐清核心訊息、安排內容並規劃投影片。",reason:"適合用來發展架構與講稿；內容、數據、圖片來源與報告時間仍需自行確認。",links:[["開啟 ChatGPT","https://chatgpt.com/"],["Canva","https://www.canva.com/"]],steps:[
+ ["確認聽眾與目標","簡報應該讓聽眾在結束後理解什麼？",["記下報告時間、聽眾、目標與評分標準。"],"根據這份作業要求，確認簡報目標、聽眾、核心訊息與時間限制。若缺少重要資訊，請先詢問我。"],
+ ["安排故事線","依照背景→問題→分析→建議→結論的邏輯安排內容。",["每張投影片盡量只傳達一個主要訊息。"],"請為［主題］規劃［投影片數量］張簡報。每張包含結論式標題、2–4 個支持要點、需要的證據與轉場句，並避免內容重複。"],
+ ["核對證據","數據、引用與案例都應該有可查證的來源。",["標示已有證據及仍需研究的主張。"],"請檢查這份簡報大綱，標記需要來源支持的主張、缺少的資訊、重複內容與需要補充例子的地方。不要編造數據。"],
+ ["設計版面與講稿","投影片是口頭說明的輔助，不應堆滿整段文字。",["用圖表呈現數據；圖片需相關且有合法使用權。"],"請為每張投影片建議視覺呈現方式，包括圖表或圖片類型、版面與文字量，並依總長度［分鐘］撰寫自然的口頭講稿。"],
+ ["排練與修正","試講、計時，並為可能的提問做好準備。",["檢查錯字、圖片來源、字體大小與整體一致性。"],"請扮演提出問題的老師，針對這份簡報提出 8 個由淺入深的問題，說明每題想檢驗什麼，以及我如何根據證據準備回答。"]
+ ]},
+ video:{title:"規劃影片製作流程",intro:"把構想、腳本、畫面與後製分開，才能選對工具。",tool:"ChatGPT",desc:"可協助發想、撰寫腳本與規劃分鏡。",reason:"先完成企劃與分鏡，再使用影片生成工具。請檢查著作權、人物肖像與平台使用條款。",links:[["開啟 ChatGPT","https://chatgpt.com/"],["Canva Video","https://www.canva.com/"]],steps:[
+ ["撰寫影片企劃","確認影片目標、受眾、平台、長度、風格與核心訊息。",["用一句話描述影片，再用一句話寫出希望觀眾採取的行動。"],"請協助我完成關於［主題］的影片企劃，受眾是［對象］，長度［秒數］，發布平台［平台］。提出構想前，先問清楚缺少的關鍵條件。"],
+ ["發展腳本","規劃開頭、主要內容與結尾，並確保符合影片長度。",["估計每個鏡頭的秒數，讓台詞讀起來自然。"],"請撰寫一支［秒數］秒的影片腳本，以表格列出時間、畫面、旁白／字幕、聲音與鏡頭目標。不要加入未提供的承諾或事實。"],
+ ["製作分鏡與畫面 Prompt","清楚描述主體、動作、場景、鏡頭、光線與畫面比例。",["不同鏡頭要維持角色、風格與色彩的一致性。"],"請將腳本轉成分鏡表，逐鏡撰寫圖片／影片 Prompt，包含主體、動作、場景、鏡頭角度、運鏡、光線、風格、16:9 比例與應避免的元素。"],
+ ["製作與後製","分別製作素材再進行剪輯，不要期待單一 Prompt 完美完成全部工作。",["確認字幕、音樂授權、使用權與畫面一致性。"],"請為這支影片建立後製檢查清單，包括剪輯節奏、音效、字幕、轉場、品牌識別、著作權與手機觀看效果。"],
+ ["評估最終影片","依最初的企劃評估成效，不只看影片是否漂亮。",["試著關閉聲音觀看，並在小螢幕上檢查。"],"請依照原始企劃評估這支影片，整理評估標準、檢查問題、可能錯誤與修正方式，並區分實際問題與個人偏好。"]
+ ]},
+ data:{title:"負責任地分析資料",intro:"先理解資料，再選擇分析方法與圖表。",tool:"ChatGPT",desc:"可協助解釋公式、撰寫程式並提出分析方法。",reason:"AI 可以提供指引與檢查邏輯，但不能取代資料確認、實際執行公式和驗證結果。",links:[["開啟 ChatGPT","https://chatgpt.com/"],["Google Sheets","https://sheets.google.com/"]],steps:[
+ ["理解資料結構","確認每列、每欄代表什麼，並檢查缺漏、重複與資料型態。",["保留原始資料，不要自動刪除任何列。"],"請協助檢查這份資料集的結構，說明每欄的意義、資料型態、缺失值、重複值與可能的品質問題。先不要修改或刪除任何資料。"],
+ ["提出分析問題","先決定想回答什麼，不要先做圖表才尋找解釋。",["確認比較變數、群組、時間範圍與測量單位。"],"根據資料的描述，提出 3 個可分析的問題。每題都列出所需變數、合適方法與解釋限制。"],
+ ["選擇分析方法","依照變數型態與研究問題選擇統計方法和圖表。",["檢查單位、樣本數、離群值與方法適用條件。"],"請為問題［問題］建議合適的分析方法，說明假設、需要檢查的條件、可執行的公式或程式，以及獨立驗證結果的方法。"],
+ ["執行並驗證","在真實資料上執行公式或程式，再用簡單方式交叉檢查。",["不要因為 AI 提供數字，就直接相信結果。"],"請用 Excel／Sheets／Python 提供逐步分析指引，解釋每步的目的、需要檢查的中間結果與發現錯誤的方法。"],
+ ["適度解讀結果","區分相關與因果，避免超出資料能支持的範圍。",["說明資料、樣本的限制，以及目前不能得出的結論。"],"請根據這份數據表撰寫結果解讀，分開列出直接觀察、可能解釋與尚不能下的結論。若研究設計不支持因果推論，不要宣稱因果關係。"]
+ ]},
+ writing:{title:"清楚寫作，同時保留自己的觀點",intro:"讓 AI 協助規劃、回饋與修改，而不是取代自己的思考。",tool:"ChatGPT",desc:"可協助建立大綱、檢查邏輯並改善文字表達。",reason:"提供自己的草稿與想法，才能得到具體回饋。請遵守學術規範，並確保自己理解每個論點。",links:[["開啟 ChatGPT","https://chatgpt.com/"]],steps:[
+ ["釐清核心論點","用自己的話寫下你想證明或解釋的內容。",["記錄主要想法、理由與現有證據。"],"請透過逐題提問，協助我釐清關於［主題］的文章論點。不要直接替我寫文章；每次回答後整理已釐清與仍缺少的資訊。"],
+ ["規劃文章大綱","每一段都應有主要觀點，並連回整體問題。",["檢查論證順序與缺乏證據的地方。"],"根據我提供的想法，建立包含論點、需尋找的證據與段落銜接的文章大綱。保留原本立場，並標示需要我補充之處。"],
+ ["撰寫初稿","依據來源與已確認的筆記逐段寫作。",["不要要求 AI 製作不存在的引用或未經確認的事實。"],"請依四個標準回饋這份初稿：論點清晰度、邏輯、證據與文字表達。先指出具體問題和例子，不要直接重寫全文。"],
+ ["有目標地修改","每一輪只處理一個主要問題，避免改掉原本的語氣。",["比較修改前後的內容，保留符合自己意思的表達。"],"請把這一段修改得更清楚流暢，但保留原意、學生語氣與原本的確定程度。列出主要修改，不要加入新事實。"],
+ ["檢查學術規範","確認引用、原創性與課程對 AI 使用的規定。",["確保自己能解釋文章內容，並在要求時揭露 AI 協助。"],"請依照作業要求建立寫作檢查清單，檢視來源、引用、邏輯、表達與 AI 使用規範。只指出草稿中有依據的問題。"]
+ ]},
+ language:{title:"主動學習翻譯與語言",intro:"不只是把文字翻譯完，也要理解語氣、術語與實際用法。",tool:"ChatGPT",desc:"可解釋語境、比較不同說法並建立練習題。",reason:"適合練習多種句型並理解用詞原因。重要文件仍應核對專業術語，必要時請專業人士審閱。",links:[["開啟 ChatGPT","https://chatgpt.com/"],["DeepL 翻譯","https://www.deepl.com/translator"]],steps:[
+ ["確認翻譯目的","學術文章、給老師的訊息與行銷內容，適合的語氣都不同。",["說明來源語言、目標語言、讀者、正式程度與需保留的術語。"],"請將以下內容從［來源語言］翻譯成［目標語言］，讀者是［對象］，語氣為［正式程度］。保留原意與專有名稱，並標出可能有多種譯法的地方。"],
+ ["比較不同表達","請 AI 解釋容易混淆的詞組與選用理由。",["不要只選聽起來漂亮的翻譯，也要確認意思沒有改變。"],"請提供兩個譯本：一個較貼近原文、一個較自然。針對重要詞組解釋語氣、使用情境與差異，不要自行增添內容。"],
+ ["確認專業術語","與課程教材或可信來源比對專業用語。",["建立原文術語、譯文、定義與例句的對照表。"],"請整理這段內容中的專業術語，列出原文、建議譯法、定義與例句。若不確定標準譯法，請標示出來讓我對照教材。"],
+ ["練習實際使用","請 AI 提供新例句和問題，確認自己是否真正理解。",["先自己回答，再查看解釋。"],"請教我這段內容中的 5 個重要詞組。用簡單語言解釋、提供一個新例句，再問我一道練習題。先不要立即給答案。"],
+ ["檢查最終版本","通讀全文，確認語氣、文法與意思一致。",["檢查數據、專有名稱、敬語與格式。"],"請從準確度、自然度、語氣及術語一致性檢查這份翻譯，指出需要修改的句子、原因與建議版本。"]
+ ]},
+ study:{title:"真正理解課程內容的考試複習",intro:"把教材轉換成解釋、練習題與具體回饋。",tool:"ChatGPT",desc:"可用不同方式解釋概念、生成題目並檢查理解程度。",reason:"請 AI 一步步教學，並先讓自己嘗試回答。仍需對照課本，因為 AI 可能出錯或過度簡化。",links:[["開啟 ChatGPT","https://chatgpt.com/"]],steps:[
+ ["找出不懂的部分","一次選一個概念或題型，不要一開始就要求解釋整章。",["說明你目前理解的內容，以及卡住的地方。"],"請用適合初學大學生的方式解釋［概念］。先問我目前理解到哪裡，再用簡單例子說明，並指出一個常見誤解。"],
+ ["透過例題學習","先看逐步示範，再試著完成類似題目，不要立刻看解答。",["確認每一步為什麼合理。"],"請針對［主題］示範一道題目，逐步解釋每個步驟的原因。接著給我一道相似題讓我自己做，先不要透露答案。"],
+ ["自我測驗","使用選擇題、簡答題，並檢查錯誤選項為什麼錯。",["混合簡單、中等與應用題。"],"請為［主題］設計 8 道由易到難的練習題，一次只問一題。等我回答後，再給回饋與解釋。"],
+ ["補足知識漏洞","把錯誤分成概念混淆、步驟錯誤或讀題問題。",["記錄錯誤類型與避免重犯的原則。"],"請根據我的錯誤回答找出知識漏洞，不要批評我。簡短解釋正確觀念，提供對照例子，再出一道題讓我練習。"],
+ ["主動複習","建立記憶卡與複習節奏，而不是只重讀筆記。",["試著用自己的話解釋概念。"],"請把我提供的筆記轉成記憶卡，包含問題、簡短答案、例子與常見錯誤。只能使用筆記中的內容，並標示資訊不足的部分。"]
+ ]}
+};
+let currentTask="case";
+const $=id=>document.getElementById(id);
+function goTo(id){$(id).scrollIntoView({behavior:"smooth",block:"start"});document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.scroll===id))}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.scroll)));
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function renderPlan(){
+ const d=data[currentTask];$("planTitle").textContent=d.title;$("planIntro").textContent=d.intro;$("toolName").textContent=d.tool;$("toolDesc").textContent=d.desc;$("toolReason").textContent=d.reason;
+ $("toolLinks").innerHTML=d.links.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener noreferrer">${x[0]} ↗</a>`).join("");
+ const level=$("level").value;let startIndex=level==="start"?0:level==="research"?1:level==="draft"?3:4;
+ $("steps").innerHTML=d.steps.map((s,i)=>`<article class="step ${i===startIndex?"open":""}" data-index="${i}"><div class="step-head" role="button" tabindex="0" aria-expanded="${i===startIndex}"><span class="step-num">${i+1}</span><span><b>${s[0]}</b><small>${i===startIndex?"建議從這裡開始":"點擊查看說明"}</small></span><span class="chevron">${i===startIndex?"−":"＋"}</span></div><div class="step-body"><p>${s[1]}</p><ul>${s[2].map(x=>`<li>${x}</li>`).join("")}</ul><div class="example"><strong>這一步的 Prompt 範例</strong>${s[3]}</div><button class="btn small use-step-prompt" data-prompt="${encodeURIComponent(s[3])}">使用這個 Prompt ↗</button><div class="tip"><b>進入下一步前：</b>請自行檢查結果、標記需要驗證的資訊，並決定哪些內容真正有助於你的作業。</div></div></article>`).join("");
+ document.querySelectorAll(".step-head").forEach(h=>{const toggle=()=>{const card=h.closest(".step");card.classList.toggle("open");h.setAttribute("aria-expanded",card.classList.contains("open"));h.querySelector(".chevron").textContent=card.classList.contains("open")?"−":"＋"};h.addEventListener("click",toggle);h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle()}})});
+ document.querySelectorAll(".use-step-prompt").forEach(b=>b.addEventListener("click",()=>{$("pTask").value=promptTaskMap[currentTask]||"分析個案";$("pContext").value=$("assignment").value||"";$("pConstraints").value="只處理目前這個步驟，不要捏造事實或來源。若資訊不足請先提問，並列出我需要自行查證的部分。";generatePrompt(decodeURIComponent(b.dataset.prompt));goTo("promptlab")}));
+}
+const promptTaskMap={case:"分析個案",research:"搜尋與整理文獻",slides:"規劃簡報大綱",video:"撰寫影片腳本",data:"分析資料",writing:"修改初稿",language:"翻譯並解釋術語",study:"解釋課程概念"};
+document.querySelectorAll(".task-option").forEach(b=>b.addEventListener("click",()=>{currentTask=b.dataset.task;document.querySelectorAll(".task-option").forEach(x=>x.classList.toggle("selected",x===b));renderPlan()}));
+$("buildPlan").addEventListener("click",()=>{renderPlan();toast("已更新你的任務流程。");$("planPanel").scrollIntoView({behavior:"smooth",block:"start"})});
+$("level").addEventListener("change",renderPlan);
+function generatePrompt(extra){
+ const task=$("pTask").value,context=$("pContext").value.trim()||"［請補充背景／貼上作業要求］",role=$("pRole").value.trim()||"學術助教",audience=$("pAudience").value.trim()||"大學生",format=$("pFormat").value,constraints=$("pConstraints").value.trim()||"不要捏造事實；清楚標示不確定之處。";
+ let result=`角色\n你是${role}。\n\n任務\n${extra||task+"。請用能幫助我理解並自行判斷的方式協助完成，而不是取代我需要進行的思考。"}\n\n背景／作業要求\n${context}\n\n回答對象與程度\n${audience}。\n\n工作流程\n1. 先確認任務目標與重要要求。\n2. 指出缺少的資訊；必要時最多先問我 3 個澄清問題。\n3. 將任務拆成小步驟，簡短說明各步驟的原因。\n4. 清楚區分有依據的事實、推論與假設。\n5. 必要時提供具體例子；不要捏造數據、引用或來源。\n\n輸出格式\n${format}。\n\n條件與評估標準\n${constraints}\n\n回答前自我檢查\n- 是否確實回應了要求？\n- 是否有需要來源或仍不確定的主張？\n- 有哪些部分需要我自行確認或補充？\n最後請列出我接下來應該親自完成的步驟。`;
+ $("promptResult").textContent=result;
+}
+$("generatePrompt").addEventListener("click",()=>{generatePrompt();toast("已依照你輸入的資訊產生 Prompt。")});
+$("copyPrompt").addEventListener("click",async()=>{await copyText($("promptResult").textContent,"已複製 Prompt。")});
+$("copyVerify").addEventListener("click",async()=>{await copyText($("verifyPrompt").textContent,"已複製查證 Prompt。")});
+async function copyText(text,msg){try{await navigator.clipboard.writeText(text);toast(msg)}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast(msg)}}
+$("downloadPrompt").addEventListener("click",()=>{const blob=new Blob([$("promptResult").textContent],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="UniAi_Prompt.txt";a.click();URL.revokeObjectURL(url);toast("已下載 .txt 檔案。")});
+$("resetPrompt").addEventListener("click",()=>{$("pContext").value="";$("pRole").value="具備批判思考能力的大學助教";$("pAudience").value="大學生，基礎程度";$("pConstraints").value="使用清楚易懂的語言。不要捏造數據或參考來源。若資料不足，請先詢問或明確說明假設。";$("pTask").selectedIndex=0;$("pFormat").selectedIndex=0;generatePrompt();toast("表單已重設。")});
+function updateChecks(){const boxes=[...$("checklist").querySelectorAll("input")],n=boxes.filter(x=>x.checked).length;$("verifyProgress").style.width=(n/boxes.length*100)+"%";$("verifyCount").textContent=`已完成 ${n}/${boxes.length} 項`;}
+$("checklist").addEventListener("change",updateChecks);$("resetChecks").addEventListener("click",()=>{$("checklist").querySelectorAll("input").forEach(x=>x.checked=false);updateChecks();toast("已重設檢核清單。")});
+renderPlan();generatePrompt();updateChecks();
+
+// AI 助理：透過伺服器 API 呼叫模型，API key 不會暴露在瀏覽器中。
+let aiHistory=[];let aiLastAnswer='';
+const aiMessages=document.getElementById('aiMessages');
+function addAiMessage(text,role){const node=document.createElement('div');node.className='ai-msg '+role;node.textContent=text;aiMessages.appendChild(node);aiMessages.scrollTop=aiMessages.scrollHeight;return node;}
+document.querySelectorAll('[data-fill]').forEach(b=>b.addEventListener('click',()=>{const box=document.getElementById('aiInput');box.value=b.dataset.fill+box.value;box.focus();}));
+async function sendAi(){const input=document.getElementById('aiInput');const question=input.value.trim();if(!question){document.getElementById('aiStatus').textContent='請先輸入問題或作業要求。';input.focus();return;}const mode=document.getElementById('aiMode').value;const style=document.getElementById('aiStyle').value;addAiMessage(question,'user');input.value='';input.disabled=true;document.getElementById('aiSend').disabled=true;document.getElementById('aiStatus').textContent='UniAi 正在產生回答……';const loading=addAiMessage('正在整理問題並準備回答……','assistant');try{const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:question,mode,style,history:aiHistory.slice(-8)})});const data=await res.json();if(!res.ok)throw new Error(data.error||'無法連接 AI。');loading.textContent=data.answer||'AI 沒有傳回內容，請再試一次。';aiLastAnswer=loading.textContent;aiHistory.push({role:'user',content:question},{role:'assistant',content:aiLastAnswer});document.getElementById('aiStatus').textContent='已收到 AI 回答。使用前請確認重要事實與來源。';}catch(err){loading.textContent='目前無法產生回答。'+err.message+'\n\n請確認伺服器正在執行，且 .env 已設定 OPENAI_API_KEY。';document.getElementById('aiStatus').textContent='AI 連線失敗。';}finally{input.disabled=false;document.getElementById('aiSend').disabled=false;input.focus();}}
+document.getElementById('aiSend').addEventListener('click',sendAi);document.getElementById('aiInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAi();}});
+document.getElementById('aiClear').addEventListener('click',()=>{aiHistory=[];aiLastAnswer='';aiMessages.innerHTML='';addAiMessage('對話已重設。你想從哪一個學習任務開始？','assistant');document.getElementById('aiStatus').textContent='';});
+document.getElementById('aiCopyLast').addEventListener('click',()=>{if(!aiLastAnswer){document.getElementById('aiStatus').textContent='目前沒有可複製的回答。';return;}copyText(aiLastAnswer,'已複製 AI 回答。');});
+</script>
+</body>
+</html>
